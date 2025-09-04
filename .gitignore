@@ -4,8 +4,9 @@ __pycache__/
 .venv/
 .env
 # Data & models (DVC will track via metafiles)
-data/**
-models/**
+metric.json
+cm.png
+
 !models/*.md
 # MLflow local runs (if using local filesystem)
 mlruns/
