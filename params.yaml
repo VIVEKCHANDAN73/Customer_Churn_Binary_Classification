@@ -8,5 +8,5 @@ model:
   class_weight: null
 features:
   numeric: ["tenure", "MonthlyCharges", "TotalCharges"]
-  categorical: ["Contract", "InternetService", "PaymentMethod", SeniorCitizen", "Partner", "Dependents", "PhoneService", "MultipleLines", "OnlineSecurity", "OnlineBackup", "DeviceProtection", "TechSupport", "StreamingTV", "StreamingMovies", "PaperlessBilling"]
+  categorical: ["Contract", "InternetService", "PaymentMethod", "SeniorCitizen", "Partner", "Dependents", "PhoneService", "MultipleLines", "OnlineSecurity", "OnlineBackup", "DeviceProtection", "TechSupport", "StreamingTV", "StreamingMovies", "PaperlessBilling"]
 label: "Churn"
