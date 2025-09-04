@@ -1,0 +1,27 @@
+stages:
+  prepare:
+    cmd: python -m src.data_prep --params params.yaml --out data/processed/train.csv data/processed/test.csv
+    deps:
+    - src/data_prep.py
+    - params.yaml
+    outs:
+    - data/processed/train.csv
+    - data/processed/test.csv
+  train:
+    cmd: python -m src.train --params params.yaml --train data/processed/train.csv --model models/model.pkl
+    deps:
+      - src/train.py
+      - params.yaml
+      - data/processed/train.csv
+    outs:
+      - models/model.pkl
+  eval:
+    cmd: python -m src.eval --params params.yaml --model models/model.pkl --test data/processed/test.csv
+    deps:
+      - src/eval.py
+      - params.yaml
+      - models/model.pkl
+      - data/processed/test.csv
+    outs:
+      - models/metrics.json
+      - models/cm.png
