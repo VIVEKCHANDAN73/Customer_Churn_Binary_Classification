@@ -7,7 +7,7 @@ import seaborn as sns
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support,confusion_matrix
 import mlflow
 import mlflow.sklearn
-from utils import load_params
+from src.utils import load_params
 import joblib
 
 def main(params_path: str, model_path: str, test_path: str):
@@ -25,6 +25,17 @@ def main(params_path: str, model_path: str, test_path: str):
     
     metrics = {"accuracy": acc, "precision": prec, "recall": rec, "f1": f1}
     
+    # ===== Log metrics to MLflow =====
+    mlflow.set_experiment("churn-demo")
+    
+    with mlflow.start_run(run_name="evaluation") as run:
+        # Log metrics
+        for k, v in metrics.items():
+            mlflow.log_metric(k, v)
+    
+        
+        print(f"Run ID: {run.info.run_id}")
+        
     # Save metrics locally for DVC
     Path("models").mkdir(parents=True, exist_ok=True)
     with open("models/metrics.json", "w") as f:
@@ -40,7 +51,7 @@ def main(params_path: str, model_path: str, test_path: str):
     plt.ylabel("True")
     plt.tight_layout()
     plt.savefig("models/cm.png")
-    plt.show()
+    # plt.show()
     
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()

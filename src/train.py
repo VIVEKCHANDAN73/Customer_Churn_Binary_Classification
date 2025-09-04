@@ -9,7 +9,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 import mlflow
 import mlflow.sklearn
-from utils import load_params
+from src.utils import load_params
 import numpy as np
 
 def build_pipeline(params, categorical, numeric):
@@ -54,7 +54,7 @@ def main(params_path: str, train_path: str, model_out: str):
     
     mlflow.set_experiment("churn-demo")
     
-    with mlflow.start_run() as run:
+    with mlflow.start_run(run_name="training") as run:
         # Log params
         for k,v in params["model"].items():
             mlflow.log_param(f"model.{k}",v)
@@ -68,8 +68,8 @@ def main(params_path: str, train_path: str, model_out: str):
         
         # Log model artifact to MLflow and mark signature
         mlflow.sklearn.log_model(pipe, "model")
-        
-        print(f"Run ID: {run.info.run_id}") 
+        existing_run_id = run.info.run_id
+        print(f"Run ID: {existing_run_id}") 
             
     
 if __name__ == "__main__":

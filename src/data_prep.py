@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from utils import load_params
+from src.utils import load_params
 
 RAW_PATH = Path("data/raw/raw.csv")
 
