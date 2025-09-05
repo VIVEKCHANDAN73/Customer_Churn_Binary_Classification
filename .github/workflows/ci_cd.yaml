@@ -74,12 +74,13 @@ jobs:
           MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ap-south-1
+          AWS_DEFAULT_REGION: us-east-1
         run: |
-          pip install mlflow boto3
-          mlflow sagemaker deploy \
-            --app-name customer-churn-model \
+          pip install mlflow boto3 botocore sagemaker
+          mlflow deployments create \
+            -t sagemaker \
+            --name customer-churn-model \
             --model-uri models:/CustomerChurnModel/Production \
-            --region-name us-east-1 \
-            --mode create \
-            --instance-type ml.t2.medium
+            --config region_name=us-east-1 \
+            --config instance_type=ml.t2.medium
+
