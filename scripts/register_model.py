@@ -11,7 +11,7 @@ mlflow.set_tracking_uri(mlflow_uri)
 model_path = "models/model.pkl"
 model = joblib.load(model_path)
 
-# Register model
+# Register models
 with mlflow.start_run():
     mlflow.sklearn.log_model(
         sk_model=model,
