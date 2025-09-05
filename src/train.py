@@ -31,7 +31,7 @@ def build_pipeline(params, categorical, numeric):
             ("num", num_transformer, numeric)
             ]
         )
-
+    #
     if params["model"]["type"] == "LogisticRegression":
         model = LogisticRegression(
             C=params["model"]["C"],
