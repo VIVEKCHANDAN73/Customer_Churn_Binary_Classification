@@ -9,34 +9,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout code
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # 2️⃣ Validate required secrets
+      - name: Validate secrets
+        run: |
+          required_secrets=(EC2_HOST EC2_SSH_KEY DB_PASSWORD RDS_ENDPOINT S3_BUCKET AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY)
+          for s in "${required_secrets[@]}"; do
+            if [ -z "${{ secrets[$s] }}" ]; then
+              echo "ERROR: Secret $s is not set"
+              exit 1
+            fi
+          done
+
+      # 3️⃣ Build Docker image
       - name: Build MLflow Docker image
         run: docker build -t mlflow-server .
 
+      # 4️⃣ Save Docker image as tar
       - name: Save Docker image as tar
-        run: docker save mlflow-server -o $GITHUB_WORKSPACE/mlflow-server.tar
+        run: |
+          docker save mlflow-server -o $GITHUB_WORKSPACE/mlflow-server.tar
+          ls -l $GITHUB_WORKSPACE/mlflow-server.tar
 
+      # 5️⃣ Fix tar permissions
       - name: Fix tar file permissions
         run: chmod 644 $GITHUB_WORKSPACE/mlflow-server.tar
 
-
+      # 6️⃣ Copy Docker image to EC2
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "mlflow-server.tar"
-          target: "~/" 
+          source: "$GITHUB_WORKSPACE/mlflow-server.tar"
+          target: "~/"
+          strict_host_key_checking: false
 
+      # 7️⃣ Run MLflow container on EC2
       - name: Run MLflow container on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+          strict_host_key_checking: false
           script: |
             docker load -i mlflow-server.tar
             docker stop mlflow || true
