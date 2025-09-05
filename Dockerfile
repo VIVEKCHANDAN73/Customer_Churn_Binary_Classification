@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install MLflow with extras (SQL + AWS)
-RUN pip install --no-cache-dir mlflow psycopg2-binary boto3
+RUN pip install --no-cache-dir mlflow==2.14.2 psycopg2-binary boto3
 
 # Expose MLflow port
 EXPOSE 5000

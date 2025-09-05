@@ -13,8 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build MLflow Docker image
-        run: |
-          docker build -t mlflow-server .
+        run: docker build -t mlflow-server .
 
       - name: Save Docker image as tar
         run: docker save mlflow-server -o mlflow-server.tar
@@ -26,7 +25,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "mlflow-server.tar"
-          target: "~/"
+          target: "~/" 
 
       - name: Run MLflow container on EC2
         uses: appleboy/ssh-action@v0.1.7
@@ -39,12 +38,13 @@ jobs:
             docker stop mlflow || true
             docker rm mlflow || true
             docker run -d -p 5000:5000 \
+              --name mlflow \
               -e BACKEND_STORE_URI=postgresql://mlflow_user:${{ secrets.DB_PASSWORD }}@${{ secrets.RDS_ENDPOINT }}:5432/mlflowdb \
               -e ARTIFACT_ROOT=s3://${{ secrets.S3_BUCKET }}/mlflow-artifacts \
               -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
               -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-              --name mlflow mlflow-server \
+              mlflow-server \
               mlflow server \
-                --backend-store-uri postgresql://mlflow_user:${{ secrets.DB_PASSWORD }}@${{ secrets.RDS_ENDPOINT }}:5432/mlflowdb \
-                --default-artifact-root s3://${{ secrets.S3_BUCKET }}/mlflow-artifacts \
+                --backend-store-uri $BACKEND_STORE_URI \
+                --default-artifact-root $ARTIFACT_ROOT \
                 --host 0.0.0.0 --port 5000

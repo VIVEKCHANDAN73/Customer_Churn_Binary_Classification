@@ -10,3 +10,4 @@ cm.png
 !models/*.md
 # MLflow local runs (if using local filesystem)
 mlruns/
+mlflow-practise.pem
