@@ -82,5 +82,7 @@ jobs:
             --name customer-churn-model \
             --model-uri models:/CustomerChurnModel/Production \
             --config region_name=us-east-1 \
+            --config execution_role_arn=arn:aws:iam::730335304698:role/AmazonSageMaker-ExecutionRole-20250906\
             --config instance_type=ml.t2.medium
+
 
