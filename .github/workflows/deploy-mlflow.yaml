@@ -16,7 +16,7 @@ jobs:
         run: docker build -t mlflow-server .
 
       - name: Save Docker image as tar
-        run: docker save mlflow-server -o mlflow-server.tar
+        run: docker save mlflow-server -o $GITHUB_WORKSPACE/mlflow-server.tar
 
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@v0.1.7
