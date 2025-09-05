@@ -59,7 +59,7 @@ jobs:
       - name: Fix tar file permissions
         run: chmod 644 ./mlflow-server.tar
 
-      # 6️⃣ Copy Docker image to EC2d
+      # 6️⃣ Copy Docker image to EC2
       - name: Copy Docker image to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
