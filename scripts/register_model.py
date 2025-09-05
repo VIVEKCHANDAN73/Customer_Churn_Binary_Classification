@@ -12,13 +12,16 @@ mlflow.set_tracking_uri(mlflow_uri)
 model_path = "models/model.pkl"
 model = joblib.load(model_path)
 
-# Register model
-with mlflow.start_run():
-    mlflow.pyfunc.log_model(
+# Start MLflow run
+with mlflow.start_run() as run:
+    # Log the sklearn model directly (no wrapper needed)
+    mlflow.sklearn.log_model(
+        sk_model=model,
         artifact_path="model",
-        python_model=mlflow.sklearn.SklearnModelWrapper(model),
         registered_model_name="CustomerChurnModel"
     )
+    
+    print("Run ID:", run.info.run_id)
 
 # Transition latest version to Production
 client = MlflowClient()
