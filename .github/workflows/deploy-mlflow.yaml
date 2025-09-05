@@ -14,15 +14,36 @@ jobs:
         uses: actions/checkout@v4
 
       # 2️⃣ Validate required secrets
-      - name: Validate secrets
+      - name: Validate required secrets
         run: |
-          required_secrets=(EC2_HOST EC2_SSH_KEY DB_PASSWORD RDS_ENDPOINT S3_BUCKET AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY)
-          for s in "${required_secrets[@]}"; do
-            if [ -z "${{ secrets[$s] }}" ]; then
-              echo "ERROR: Secret $s is not set"
-              exit 1
-            fi
-          done
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "ERROR: EC2_HOST is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "ERROR: EC2_SSH_KEY is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.DB_PASSWORD }}" ]; then
+            echo "ERROR: DB_PASSWORD is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.RDS_ENDPOINT }}" ]; then
+            echo "ERROR: RDS_ENDPOINT is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.S3_BUCKET }}" ]; then
+            echo "ERROR: S3_BUCKET is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then
+            echo "ERROR: AWS_ACCESS_KEY_ID is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]; then
+            echo "ERROR: AWS_SECRET_ACCESS_KEY is not set"
+            exit 1
+          fi
 
       # 3️⃣ Build Docker image
       - name: Build MLflow Docker image
