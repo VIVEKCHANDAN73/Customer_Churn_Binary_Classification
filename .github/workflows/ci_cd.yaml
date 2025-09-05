@@ -41,6 +41,14 @@ jobs:
       - name: Run DVC Pipeline
         run: dvc repro
 
+      - name: Commit updated dvc.lock
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add dvc.lock
+          git diff --cached --quiet || git commit -m "Update dvc.lock after pipeline run"
+          git push origin main || echo "Push failed (branch may be protected). Changes are committed locally."
+
       - name: DVC Push Outputs
         run: dvc push
 
