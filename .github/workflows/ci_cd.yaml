@@ -38,14 +38,6 @@ jobs:
           export AWS_DEFAULT_REGION=us-east-1
           dvc pull --force
 
-
-
-        
-
-
-      - name: DVC Pull from Remote
-        run: dvc pull --force
-
       - name: Run DVC Pipeline
         run: dvc repro
 
