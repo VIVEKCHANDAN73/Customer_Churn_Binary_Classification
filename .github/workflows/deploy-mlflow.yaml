@@ -77,10 +77,10 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker load -i mlflow-server.tar
-            docker stop mlflow || true
-            docker rm mlflow || true
-            docker run -d -p 5000:5000 \
+            sudo docker load -i mlflow-server.tar
+            sudo docker stop mlflow || true
+            sudo docker rm mlflow || true
+            sudo docker run -d -p 5000:5000 \
               --name mlflow \
               -e BACKEND_STORE_URI=postgresql://mlflow_user:${{ secrets.DB_PASSWORD }}@${{ secrets.RDS_ENDPOINT }}:5432/mlflowdb \
               -e ARTIFACT_ROOT=s3://${{ secrets.S3_BUCKET }}/mlflow-artifacts \
