@@ -47,7 +47,35 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: python scripts/register_model.py
 
-      - name: (Optional) Deploy to SageMaker
+      - name: Deploy to SageMaker
         if: github.ref_type == 'tag'  # deploy only on tag
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ap-south-1
         run: |
-          echo "Trigger deployment to SageMaker here using MLflow deployment plugin or AWS CLI"
+          pip install mlflow boto3  # ensure mlflow is available
+          python - <<EOF
+            import mlflow
+            import mlflow.sagemaker
+            import os
+
+            # MLflow tracking URI
+            mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI"))
+
+            # Model URI: use the registered model name and stage
+            model_uri = "models:/CustomerChurnModel/Production"  # replace with your model name & stage
+
+            # SageMaker app name
+            app_name = "customer-churn-model"
+
+            # Deploy model to SageMaker
+            mlflow.sagemaker.deploy(
+                app_name=app_name,
+                model_uri=model_uri,
+                region_name=os.environ.get("AWS_DEFAULT_REGION"),
+                mode="create",  # "create" for new endpoint, "replace" to update
+                instance_type="ml.t2.medium"  # change as needed
+            )
+            EOF
