@@ -7,7 +7,7 @@ import joblib
 mlflow_uri = os.environ.get("MLFLOW_TRACKING_URI")
 mlflow.set_tracking_uri(mlflow_uri)
 
-# Load models
+# Load model
 model_path = "models/model.pkl"
 model = joblib.load(model_path)
 
