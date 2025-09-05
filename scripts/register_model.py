@@ -14,9 +14,9 @@ model = joblib.load(model_path)
 
 # Register model
 with mlflow.start_run():
-    mlflow.sklearn.log_model(
-        sk_model=model,
+    mlflow.pyfunc.log_model(
         artifact_path="model",
+        python_model=mlflow.sklearn.SklearnModelWrapper(model),
         registered_model_name="CustomerChurnModel"
     )
 
