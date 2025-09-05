@@ -3,6 +3,8 @@ name: mlops-ci-cd
 on:
   push:
     branches: [ main ]
+    tags:
+      - "*"   # runs for all tags
   pull_request:
     branches: [ main ]
   workflow_dispatch: {}
