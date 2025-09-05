@@ -32,7 +32,7 @@ jobs:
           aws-region: us-east-1
 
       - name: DVC Pull from Remote
-        run: dvc pull --remote myremote --verbose
+        run: dvc pull --force
 
       - name: Run DVC Pipeline
         run: dvc repro
