@@ -76,27 +76,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ap-south-1
         run: |
-          pip install mlflow boto3  # ensure mlflow is available
-          python - <<EOF
-          import mlflow
-          import mlflow.sagemaker
-          import os
-        
-          # MLflow tracking URI
-          mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI"))
-
-          # Model URI: use the registered model name and stage
-          model_uri = "models:/CustomerChurnModel/Production"  # replace with your model name & stage
-
-          # SageMaker app name
-          app_name = "customer-churn-model"
-
-          # Deploy model to SageMaker
-          mlflow.sagemaker.deploy(
-              app_name=app_name,
-              model_uri=model_uri,
-              region_name=us-east-1,  # change as needed
-              mode="create",  # "create" for new endpoint, "replace" to update
-              instance_type="ml.t2.medium"  # change as needed
-          )
-          EOF
+          pip install mlflow boto3
+          mlflow sagemaker deploy \
+            --app-name customer-churn-model \
+            --model-uri models:/CustomerChurnModel/Production \
+            --region-name us-east-1 \
+            --mode create \
+            --instance-type ml.t2.medium
