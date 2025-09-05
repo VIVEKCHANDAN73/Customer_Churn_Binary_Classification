@@ -18,8 +18,8 @@ jobs:
       - name: Save Docker image as tar
         run: docker save mlflow-server -o $GITHUB_WORKSPACE/mlflow-server.tar
 
-      - name: Verify Docker tar
-        run: ls -l $GITHUB_WORKSPACE/mlflow-server.tar
+      - name: Fix tar file permissions
+        run: chmod 644 $GITHUB_WORKSPACE/mlflow-server.tar
 
 
       - name: Copy Docker image to EC2
