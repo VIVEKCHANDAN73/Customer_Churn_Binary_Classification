@@ -49,15 +49,15 @@ jobs:
       - name: Build MLflow Docker image
         run: docker build -t mlflow-server .
 
-      # 4️⃣ Save Docker image as tar
+      # 4️⃣ Save Docker image as tar in repo root
       - name: Save Docker image as tar
         run: |
-          docker save mlflow-server -o $GITHUB_WORKSPACE/mlflow-server.tar
-          ls -l $GITHUB_WORKSPACE/mlflow-server.tar
+          docker save mlflow-server -o ./mlflow-server.tar
+          ls -l ./mlflow-server.tar
 
       # 5️⃣ Fix tar permissions
       - name: Fix tar file permissions
-        run: chmod 644 $GITHUB_WORKSPACE/mlflow-server.tar
+        run: chmod 644 ./mlflow-server.tar
 
       # 6️⃣ Copy Docker image to EC2
       - name: Copy Docker image to EC2
@@ -66,9 +66,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "$GITHUB_WORKSPACE/mlflow-server.tar"
+          source: "./mlflow-server.tar"  # relative path ensures file exists
           target: "~/"
-          strict_host_key_checking: false
 
       # 7️⃣ Run MLflow container on EC2
       - name: Run MLflow container on EC2
@@ -77,7 +76,6 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          strict_host_key_checking: false
           script: |
             docker load -i mlflow-server.tar
             docker stop mlflow || true
