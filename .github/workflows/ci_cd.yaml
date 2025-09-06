@@ -83,8 +83,4 @@ jobs:
             --model-uri models:/CustomerChurnModel/Production \
             --config region_name=us-east-1 \
             --config execution_role_arn=arn:aws:iam::730335304698:role/AmazonSageMaker-ExecutionRole-20250906\
-            --config instance_type=ml.t2.medium \
-            --config image_url=683313688378.dkr.ecr.us-east-1.amazonaws.com/sagemaker-scikit-learn:1.0-1-cpu-py3
-
-
-
+            --config instance_type=ml.t2.medium
