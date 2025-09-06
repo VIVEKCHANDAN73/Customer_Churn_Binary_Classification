@@ -27,8 +27,9 @@ with mlflow.start_run() as run:
 # Transition latest version to Production
 client = MlflowClient()
 latest_versions = client.get_latest_versions("CustomerChurnModel")
-print("Version:", latest_versions[-1])
-print("Artifact URI:", latest_versions.source)
+latest = client.get_latest_versions("CustomerChurnModel")[-1]
+print("Version:", latest[-1])
+print("Artifact URI:", latest.source)
 if latest_versions:
     version = latest_versions[-1].version  # pick the newest one
     client.transition_model_version_stage(
