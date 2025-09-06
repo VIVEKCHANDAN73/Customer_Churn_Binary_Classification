@@ -24,7 +24,7 @@ with mlflow.start_run() as run:
     
     print("Run ID:", run.info.run_id)
 
-# Transition latest version to Production
+# Transition latest version to Productions
 client = MlflowClient()
 latest_versions = client.get_latest_versions("CustomerChurnModel")
 latest = client.get_latest_versions("CustomerChurnModel")[-1]
