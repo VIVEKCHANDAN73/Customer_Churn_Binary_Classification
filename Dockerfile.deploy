@@ -27,18 +27,12 @@ RUN pip install --no-cache-dir \
     psycopg2-binary \
     joblib
 
-# -------------------------------
-# Copy any custom model code if needed
-# -------------------------------
-# COPY ./model /app/model
 
-# -------------------------------
-# Expose Port
-# -------------------------------
-EXPOSE 8080
+# Copy your MLflow model artifacts
+COPY models /opt/mlflow/models
 
-# -------------------------------
-# Note:
-# SageMaker automatically runs the container entrypoint for PyFunc models.
-# Do NOT set CMD here. SageMaker will start the model server internally.
-# -------------------------------
+# Expose the port for SageMaker to call
+EXPOSE 5000
+
+# Entry point that SageMaker expects
+ENTRYPOINT ["mlflow", "models", "serve", "-m", "/opt/mlflow/models", "-p", "5000"]
