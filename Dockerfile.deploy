@@ -1,0 +1,44 @@
+# -------------------------------
+# Base Image
+# -------------------------------
+FROM python:3.11-slim
+
+# -------------------------------
+# Set Working Directory
+# -------------------------------
+WORKDIR /app
+
+# -------------------------------
+# Install System Dependencies
+# -------------------------------
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# -------------------------------
+# Install Python Dependencies
+# -------------------------------
+RUN pip install --no-cache-dir \
+    mlflow==2.14.2 \
+    scikit-learn \
+    pandas \
+    boto3 \
+    psycopg2-binary \
+    joblib
+
+# -------------------------------
+# Copy any custom model code if needed
+# -------------------------------
+# COPY ./model /app/model
+
+# -------------------------------
+# Expose Port
+# -------------------------------
+EXPOSE 8080
+
+# -------------------------------
+# Note:
+# SageMaker automatically runs the container entrypoint for PyFunc models.
+# Do NOT set CMD here. SageMaker will start the model server internally.
+# -------------------------------

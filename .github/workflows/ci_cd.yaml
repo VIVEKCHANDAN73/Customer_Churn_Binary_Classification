@@ -68,6 +68,19 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: python scripts/register_model.py
 
+      - name: Build Docker Image
+        run: sudo docker build -t churn-mlflow-pyfunc:2.14.2 -f Dockerfile.deploy .
+
+      - name: Tag & Push Docker Image to ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          sudo docker tag churn-mlflow-pyfunc:2.14.2 730335304698.dkr.ecr.us-east-1.amazonaws.com/churn-mlflow-pyfunc:2.14.2
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 730335304698.dkr.ecr.us-east-1.amazonaws.com
+          sudo docker push 730335304698.dkr.ecr.us-east-1.amazonaws.com/churn-mlflow-pyfunc:2.14.2
+
       - name: Deploy to SageMaker
         if: github.ref_type == 'tag'  # deploy only on tag
         env:
@@ -84,5 +97,6 @@ jobs:
             --config region_name=us-east-1 \
             --config execution_role_arn=arn:aws:iam::730335304698:role/AmazonSageMaker-ExecutionRole-20250906\
             --config instance_type=ml.t2.medium \
-            --config image_url="public.ecr.aws/mlflow/mlflow-pyfunc:2.14.2"
+            --config image_url="730335304698.dkr.ecr.us-east-1.amazonaws.com/churn-mlflow-pyfunc:2.14.2"
+
 
