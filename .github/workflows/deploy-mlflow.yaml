@@ -80,6 +80,7 @@ jobs:
             sudo docker load -i mlflow-server.tar
             sudo docker stop mlflow || true
             sudo docker rm mlflow || true
+            echo "Launching MLflow with backend=$BACKEND_STORE_URI and artifact root=$ARTIFACT_ROOT"
             sudo docker run -d -p 5000:5000 \
               --name mlflow \
               -e BACKEND_STORE_URI=postgresql://mlflow_user:${{ secrets.DB_PASSWORD }}@${{ secrets.RDS_ENDPOINT }}:5432/mlflowdb \
