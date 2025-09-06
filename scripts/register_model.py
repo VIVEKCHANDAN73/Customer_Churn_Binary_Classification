@@ -4,7 +4,7 @@ import mlflow.sklearn
 import joblib
 from mlflow.tracking import MlflowClient
 
-# Read MLflow URI from environment variables
+# Read MLflow URI from environment variable
 mlflow_uri = os.environ.get("MLFLOW_TRACKING_URI")
 mlflow.set_tracking_uri(mlflow_uri)
 print("MLflow Tracking URI:", mlflow.get_tracking_uri())
