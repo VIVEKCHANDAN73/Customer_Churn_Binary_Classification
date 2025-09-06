@@ -91,5 +91,5 @@ jobs:
               mlflow-server \
               mlflow server \
                 --backend-store-uri $BACKEND_STORE_URI \
-                --default-artifact-root s3://${{ secrets.S3_BUCKET }}/mlflow-artifacts \
+                --default-artifact-root //${{ secrets.S3_BUCKET }}/mlflow-artifacts \
                 --host 0.0.0.0 --port 5000
