@@ -12,6 +12,8 @@ print("MLflow Tracking URI:", mlflow.get_tracking_uri())
 # Load models
 model_path = "models/model.pkl"
 model = joblib.load(model_path)
+print("Model saved at:", model_path)
+
 
 # Start MLflow run
 with mlflow.start_run() as run:
