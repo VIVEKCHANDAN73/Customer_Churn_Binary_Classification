@@ -35,7 +35,7 @@ if latest_versions:
     client.transition_model_version_stage(
         name="CustomerChurnModel",
         version=version,
-        alias="Production"
+        stage="Production"
     )
     print(f"Model CustomerChurnModel v{version} promoted to Production")
 else:
