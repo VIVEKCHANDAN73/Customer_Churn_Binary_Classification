@@ -83,6 +83,8 @@ jobs:
             sudo docker rm mlflow || true
             BACKEND_STORE_URI="postgresql://mlflow_user:${{ secrets.DB_PASSWORD }}@${{ secrets.RDS_ENDPOINT }}:5432/mlflowdb"
             ARTIFACT_ROOT="${{ secrets.S3_BUCKET }}"
+            echo "Launching MLflow with backend=$BACKEND_STORE_URI and artifact root=$ARTIFACT_ROOT"
+
             sudo docker run -d -p 5000:5000 \
               --name mlflow \
               -e BACKEND_STORE_URI=$BACKEND_STORE_URI \
