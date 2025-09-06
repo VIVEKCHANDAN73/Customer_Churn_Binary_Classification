@@ -81,15 +81,16 @@ jobs:
             sudo docker load -i mlflow-server.tar
             sudo docker stop mlflow || true
             sudo docker rm mlflow || true
-            echo "Launching MLflow with backend=$BACKEND_STORE_URI and artifact root=$ARTIFACT_ROOT"
+            BACKEND_STORE_URI="postgresql://mlflow_user:${{ secrets.DB_PASSWORD }}@${{ secrets.RDS_ENDPOINT }}:5432/mlflowdb"
+            ARTIFACT_ROOT="${{ secrets.S3_BUCKET }}"
             sudo docker run -d -p 5000:5000 \
               --name mlflow \
-              -e BACKEND_STORE_URI=postgresql://mlflow_user:${{ secrets.DB_PASSWORD }}@${{ secrets.RDS_ENDPOINT }}:5432/mlflowdb \
-              -e ARTIFACT_ROOT=${{ secrets.S3_BUCKET }} \
+              -e BACKEND_STORE_URI=$BACKEND_STORE_URI \
+              -e ARTIFACT_ROOT=$ARTIFACT_ROOT \
               -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
               -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
               mlflow-server \
               mlflow server \
                 --backend-store-uri $BACKEND_STORE_URI \
-                --default-artifact-root ${{ secrets.S3_BUCKET }}/mlflow-artifacts \
+                --default-artifact-root s3://$ARTIFACT_ROOT/mlflow-artifacts \
                 --host 0.0.0.0 --port 5000
