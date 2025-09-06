@@ -47,7 +47,7 @@ jobs:
           dvc pull --force
 
       - name: Run DVC Pipeline
-        run: dvc repro
+        run: dvc repro --force train
 
       - name: Commit updated dvc.lock
         run: |
