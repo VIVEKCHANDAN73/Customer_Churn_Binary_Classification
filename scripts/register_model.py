@@ -12,7 +12,7 @@ mlflow.set_tracking_uri(mlflow_uri)
 model_path = "models/model.pkl"
 model = joblib.load(model_path)
 
-# Start MLflow run
+# Start MLflow runs
 with mlflow.start_run() as run:
     # Log the sklearn model directly (no wrapper needed)
     mlflow.sklearn.log_model(
