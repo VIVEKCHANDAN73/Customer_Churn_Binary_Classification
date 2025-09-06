@@ -28,7 +28,7 @@ with mlflow.start_run() as run:
 client = MlflowClient()
 latest_versions = client.get_latest_versions("CustomerChurnModel")
 latest = client.get_latest_versions("CustomerChurnModel")[-1]
-print("Version:", latest[-1])
+print("Version:", latest)
 print("Artifact URI:", latest.source)
 if latest_versions:
     version = latest_versions[-1].version  # pick the newest one
