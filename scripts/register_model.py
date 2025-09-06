@@ -7,6 +7,7 @@ from mlflow.tracking import MlflowClient
 # Read MLflow URI from environment variable
 mlflow_uri = os.environ.get("MLFLOW_TRACKING_URI")
 mlflow.set_tracking_uri(mlflow_uri)
+print("MLflow Tracking URI:", mlflow.get_tracking_uri())
 
 # Load model
 model_path = "models/model.pkl"
@@ -33,6 +34,6 @@ if latest_versions:
         version=version,
         stage="Production"
     )
-    print(f"Model CustomerChurnModel v{version} promoted to Production ✅")
+    print(f"Model CustomerChurnModel v{version} promoted to Production")
 else:
     print("No model version found to promote.")
